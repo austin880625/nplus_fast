@@ -10,6 +10,9 @@ class MessagesController < ApplicationController
           user_hash = Hash.new
           user_hash[:username] = user[:username]
           user_hash[:user_id] = user_ids[i]
+          user_hash[:liked_gift] = user[:liked_gift]
+          #user_hash[:current_party] 
+          #user_hash[:past_party] = 
           response.push(user_hash)
         end
         

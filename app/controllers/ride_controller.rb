@@ -1,5 +1,5 @@
 class RideController < ApplicationController
-  skip_before_action :requireLogin, only: [:index]
+  #skip_before_action :requireLogin, only: [:index]
   def index
     rides = Ride.all
     response = Hash.new
@@ -21,11 +21,14 @@ class RideController < ApplicationController
       user.rides.push(ride) rescue ActiveRecord::RecordNotUnique
       ride.users.push(user) rescue ActiveRecord::RecordNotUnique
     end
-
-
     render :json => response
   end
 
+  def update
+    user_id = params.require(:user_id)  
+    ride_id = params[:id]
+    RideMembership.create({user_id: user_id, ride_id: ride_id})
+  end
   private
 
   def ride_require
