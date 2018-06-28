@@ -46,10 +46,10 @@ class RideController < ApplicationController
     response[:num_of_participants] = ride.users.count
     render :json => response
   end
-  def delete
+  def destroy
     response = Hash.new
     begin
-      user_id = params.require(:user_id)
+      user_id = @user_id
       ride_id = params[:id]
       user = User.find(user_id)
       ride = Ride.find(ride_id)
