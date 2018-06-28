@@ -9,7 +9,5 @@ Rails.application.routes.draw do
         post :talked_to
       end
     end
-
-
   end
 end
