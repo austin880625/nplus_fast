@@ -1,5 +1,5 @@
 class RideController < ApplicationController
-  skip_before_action :requireLogin, only: [:create, :update]
+  skip_before_action :requireLogin, only: [:index]
   def index
     rides = Ride.all
     response = Hash.new

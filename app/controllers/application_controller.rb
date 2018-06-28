@@ -6,11 +6,14 @@ class ApplicationController < ActionController::Base
   def requireLogin
     begin
       token = params.require(:token)
-        if Token.where(content: token).empty?
-          response[:status] = 'failed'
-          response[:error] = 'token is invalid'
-          render :json => response
-        end
+      begin
+        tokenObj = Token.where(content: token).take!
+      rescue ActiveRecord::RecordNotFound
+        response = Hash.new
+        response[:status] = 'failed'
+        response[:error] = 'token is invalid'
+        render :json => response
+      end
     rescue ActionController::ParameterMissing
       response = Hash.new
       response[:status] = 'failed'
