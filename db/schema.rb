@@ -20,6 +20,13 @@ ActiveRecord::Schema.define(version: 2018_06_28_144730) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "ride_histories", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "ride_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "ride_memberships", force: :cascade do |t|
     t.integer "user_id"
     t.integer "ride_id"

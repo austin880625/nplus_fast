@@ -8,13 +8,14 @@ Rails.application.routes.draw do
     put '/me', to: 'user#update'
     get '/user/:id', to: 'user#show'
     resources :messages do
+      collection do
+        post :talked_to
+      end
       member do
         post :show
         post :send_msg
       end
-      collection do
-        post :talked_to
-      end
+      
     end
 
   end
