@@ -13,19 +13,21 @@ class RideController < ApplicationController
 
   def create
     response = Hash.new
-    ride = Ride.new(ride_require.except(:passengers))
+    ride = Ride.new(ride_require.except(:passenger))
     response[:id] = ride.save ? ride.id : nil
-    for id in :passengers do
-      user.find(id).rides |= [ride] 
-
+    user = User.find_by(id: ride_require[:passenger])
+    if(!user.nil?)
+      user.rides.push(ride) rescue ActiveRecord::RecordNotUnique
+      ride.users.push(user) rescue ActiveRecord::RecordNotUnique
     end
+
+    
     render :json => response
   end
 
   private
 
   def ride_require
-    params.require(:ride).permit(:title, :time_start,:time_end,:description, :driver, :from, :to, :vehicle, :passengers, :num_passenger_max)
-
+    params.permit(:title, :time_start,:time_end,:description, :driver, :from, :to, :vehicle, :passenger, :num_passenger_max)
   end
 end
