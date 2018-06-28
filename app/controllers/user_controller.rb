@@ -6,20 +6,25 @@ class UserController < ApplicationController
         response = Hash.new
         response[:status] = 'success'
         response[:username] = user.username
-        rideHistories = RideHistory.where(user_id: @user_id)
+        rides = user.rides
         response[:rides] = {past: [], current: [], upcoming: []}
         t = Time.new
         ti = t.to_i*1000
-        rideHistories.each do |rh|
-            if ti > rh.end_time.to_i
+        rides.each do |rh|
+            if ti > rh.time_end.to_i
                 response[:rides][:past] << rh
-            elsif ti < rh.end_time.to_i and ti > rh.start_time.to_i
+            elsif ti < rh.time_end.to_i and ti > rh.time_start.to_i
                 response[:rides][:current] << rh
-            elsif ti < rh.start_time
+            elsif ti < rh.time_start
                 response[:rides][:upcoming] << rh
             end
         end
         render :json => response
+    end
+    def update
+        user = User.find(@user_id)
+        liked_gift = params[:liked_gift]
+        user.update(@user_id, liked_gift: liked_gift)
     end
     def login
         response = Hash.new

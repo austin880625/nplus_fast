@@ -3,7 +3,7 @@ class RideController < ApplicationController
   def index
     rides = Ride.all
     response = Hash.new
-    response[:status] = "succeed"
+    response[:status] = "success"
     response[:data] = []
     rides.each do |ride|
       response[:data].push(ride)
@@ -14,7 +14,7 @@ class RideController < ApplicationController
 
   def create
     response = Hash.new
-    ride = Ride.new(ride_require.except(:passenger))
+    ride = Ride.new(ride_require.except(:passenger, :token))
     response[:id] = ride.save ? ride.id : nil
     user = User.find_by(id: ride_require[:passenger])
     response[:created_at] = ride[:created_at]
@@ -26,7 +26,7 @@ class RideController < ApplicationController
 
   def update
     is_driver = params[:is_driver]
-    user_id = params.require(:user_id)  
+    user_id = params.require(:user_id)
     ride_id = params[:id]
     puts(user_id)
     puts(ride_id)
@@ -37,15 +37,31 @@ class RideController < ApplicationController
     user.rides |= [ride]
     #ride.users.push(user) rescue ActiveRecord::RecordNotUnique
 
-    
+
     response = Hash.new
     if(is_driver)
       ride.driver = user_id
     end
-    response[:status] = "succeed"
+    response[:status] = "success"
     response[:num_of_participants] = ride.users.count
     render :json => response
   end
+  def delete
+    response = Hash.new
+    begin
+      user_id = params.require(:user_id)
+      ride_id = params[:id]
+      user = User.find(user_id)
+      ride = Ride.find(ride_id)
+      user.rides.delete(ride)
+      response[:status] = 'success'
+    rescue ActionController::ParameterMissing
+      response[:status] = 'failed'
+      response[:error] = 'user_id is required'
+    end
+    render :json => response
+  end
+
   private
 
   def ride_require
