@@ -4,15 +4,11 @@ Rails.application.routes.draw do
     resources :ride
     post '/login', to: 'login#index'
     resources :messages do
-      post :talked_to
-
-    scope :api do
-      resources :ride
-      resources :messages do
-        collection do
-          post :talked_to
-        end
-      end    
-    end
+      collection do
+        post :talked_to
+      end
+    end    
+       
+    
   end
 end
