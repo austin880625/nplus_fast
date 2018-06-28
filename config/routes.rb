@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     get '/logout', to: 'user#logout'
     get '/me', to: 'user#me'
     put '/me', to: 'user#update'
+    get '/user/:id', to: 'user#show'
     resources :messages do
       member do
         post :show

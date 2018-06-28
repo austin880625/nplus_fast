@@ -1,24 +1,12 @@
 require 'digest'
 class UserController < ApplicationController
-    skip_before_action :requireLogin, only: [:login]
+    skip_before_action :requireLogin, only: [:login, :show]
     def me
-        user = User.find(@user_id)
-        response = Hash.new
-        response[:status] = 'success'
-        response[:username] = user.username
-        rides = user.rides
-        response[:rides] = {past: [], current: [], upcoming: []}
-        t = Time.new
-        ti = t.to_i*1000
-        rides.each do |rh|
-            if ti > rh.time_end.to_i
-                response[:rides][:past] << rh
-            elsif ti < rh.time_end.to_i and ti > rh.time_start.to_i
-                response[:rides][:current] << rh
-            elsif ti < rh.time_start
-                response[:rides][:upcoming] << rh
-            end
-        end
+        response = userInfo(@user_id)
+        render :json => response
+    end
+    def show
+        response = userInfo(params[:id])
         render :json => response
     end
     def update
@@ -67,6 +55,31 @@ class UserController < ApplicationController
         render :json => response
     end
     private
+    def userInfo(id)
+        response = Hash.new
+        begin
+            user = User.find(id)
+            response[:status] = 'success'
+            response[:username] = user.username
+            rides = user.rides
+            response[:rides] = {past: [], current: [], upcoming: []}
+            t = Time.new
+            ti = t.to_i*1000
+            rides.each do |rh|
+                if ti > rh.time_end.to_i
+                    response[:rides][:past] << rh
+                elsif ti < rh.time_end.to_i and ti > rh.time_start.to_i
+                    response[:rides][:current] << rh
+                elsif ti < rh.time_start
+                    response[:rides][:upcoming] << rh
+                end
+            end
+        rescue ActiveRecord::RecordNotFound
+            response[:status] = 'failed'
+            response[:error] = 'user not found'
+        end
+        response
+    end
     def loginParam
         params.permit(:username, :password)
     end
