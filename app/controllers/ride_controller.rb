@@ -14,9 +14,9 @@ class RideController < ApplicationController
 
   def create
     response = Hash.new
-    ride = Ride.new(ride_require.except(:passenger, :token))
+    ride = Ride.new(ride_require.except(:token, :user_id))
     response[:id] = ride.save ? ride.id : nil
-    user = User.find_by(id: ride_require[:passenger])
+    user = User.find_by(id: ride_require[:user_id])
     response[:created_at] = ride[:created_at]
     if(!user.nil?)
       user.rides |= [ride]
@@ -62,6 +62,6 @@ class RideController < ApplicationController
   private
 
   def ride_require
-    params.permit(:title, :time_start,:time_end,:description, :driver, :from, :to, :vehicle, :passenger, :num_passenger_max)
+    params.permit(:title, :time_start,:time_end,:description, :driver, :from, :to, :vehicle, :num_passenger_max, :user_id)
   end
 end
