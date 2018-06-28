@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resources :messages do
       member do
         post :show
+        post :send_msg
       end
       collection do
         post :talked_to
