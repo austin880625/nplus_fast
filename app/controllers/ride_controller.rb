@@ -17,9 +17,9 @@ class RideController < ApplicationController
     ride = Ride.new(ride_require.except(:passenger))
     response[:id] = ride.save ? ride.id : nil
     user = User.find_by(id: ride_require[:passenger])
+    response[:created_at] = ride[:created_at]
     if(!user.nil?)
-      user.rides.push(ride) rescue ActiveRecord::RecordNotUnique
-      #ride.users.push(user) rescue ActiveRecord::RecordNotUnique
+      user.rides |= [ride]
     end
     render :json => response
   end
@@ -30,8 +30,6 @@ class RideController < ApplicationController
     ride_id = params[:id]
     puts(user_id)
     puts(ride_id)
-   
-
     ride = Ride.find(ride_id)
 
     user = User.find(user_id)
@@ -41,11 +39,11 @@ class RideController < ApplicationController
 
     
     response = Hash.new
-
-    ride.driver = user_id
+    if(is_driver)
+      ride.driver = user_id
+    end
     response[:status] = "succeed"
     response[:num_of_participants] = ride.users.count
-    response[:ride_count] = user.rides.count
     render :json => response
   end
   private
