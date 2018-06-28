@@ -10,11 +10,18 @@ class RideController < ApplicationController
     end
     render :json => response
 
+  end 
+
+  def show ## GET specific Ride
+    id = params[:id]
+    ride = Ride.find(id)
+    render :json => ride.to_json
   end
 
   def create
     response = Hash.new
     ride = Ride.new(ride_require.except(:token, :user_id))
+    ride.created_by = ride_require[:user_id]
     response[:id] = ride.save ? ride.id : nil
     user = User.find_by(id: ride_require[:user_id])
     response[:created_at] = ride[:created_at]

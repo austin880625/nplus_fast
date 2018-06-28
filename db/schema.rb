@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_28_144730) do
+ActiveRecord::Schema.define(version: 2018_06_28_185729) do
 
   create_table "messages", force: :cascade do |t|
     t.integer "send_from"
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 2018_06_28_144730) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "driver"
+    t.integer "created_by"
   end
 
   create_table "tokens", force: :cascade do |t|
