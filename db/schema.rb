@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_28_070520) do
+ActiveRecord::Schema.define(version: 2018_06_28_082707) do
 
   create_table "messages", force: :cascade do |t|
     t.integer "send_from"
@@ -33,6 +33,14 @@ ActiveRecord::Schema.define(version: 2018_06_28_070520) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tokens", force: :cascade do |t|
+    t.string "content"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["content"], name: "index_tokens_on_content", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "email"
@@ -40,6 +48,7 @@ ActiveRecord::Schema.define(version: 2018_06_28_070520) do
     t.string "liked_gift"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
 end
