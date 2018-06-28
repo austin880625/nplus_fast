@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_action :requireLogin
+  #before_action :requireLogin
   protect_from_forgery with: :null_session
 
   private

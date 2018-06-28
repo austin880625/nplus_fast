@@ -15,8 +15,6 @@ class MessagesController < ApplicationController
           #user_hash[:past_party] = 
           response.push(user_hash)
         end
-        
-        response.push()
      end
     end
 
