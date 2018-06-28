@@ -15,7 +15,7 @@ class RideController < ApplicationController
     response = Hash.new
     ride = Ride.new(ride_require.except(:passengers))
     response[:id] = ride.save ? ride.id : nil
-    for id in :passengers
+    for id in :passengers do
 
     end
     render :json => response
