@@ -1,0 +1,2 @@
+class RideHistory < ApplicationRecord
+end

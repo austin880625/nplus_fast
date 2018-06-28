@@ -1,6 +1,26 @@
 require 'digest'
-class LoginController < ApplicationController
-    skip_before_action :requireLogin
+class UserController < ApplicationController
+    skip_before_action :requireLogin, only: [:login]
+    def me
+        user = User.find(@user_id)
+        response = Hash.new
+        response[:status] = 'success'
+        response[:username] = user.username
+        rideHistories = RideHistory.where(user_id: @user_id)
+        response[:rides] = {past: [], current: [], upcoming: []}
+        t = Time.new
+        ti = t.to_i*1000
+        rideHistories.each do |rh|
+            if ti > rh.end_time.to_i
+                response[:rides][:past] << rh
+            elsif ti < rh.end_time.to_i and ti > rh.start_time.to_i
+                response[:rides][:current] << rh
+            elsif ti < rh.start_time
+                response[:rides][:upcoming] << rh
+            end
+        end
+        render :json => response
+    end
     def login
         response = Hash.new
         begin
@@ -33,7 +53,7 @@ class LoginController < ApplicationController
         end
 
         begin
-            token = Token.where(content: tokenParam[:token]).take!
+            token = Token.where(content: tokenParam).take!
             token.destroy
         rescue ActiveRecord::RecordNotFound
         end

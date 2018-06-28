@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  #before_action :requireLogin
+  before_action :requireLogin
   protect_from_forgery with: :null_session
 
   private
@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
       token = params.require(:token)
       begin
         tokenObj = Token.where(content: token).take!
+        @user_id = tokenObj.user_id
       rescue ActiveRecord::RecordNotFound
         response = Hash.new
         response[:status] = 'failed'
