@@ -28,10 +28,7 @@ class RideController < ApplicationController
     is_driver = params[:is_driver]
     user_id = params.require(:user_id)
     ride_id = params[:id]
-    puts(user_id)
-    puts(ride_id)
     ride = Ride.find(ride_id)
-
     user = User.find(user_id)
 
     user.rides |= [ride]
@@ -40,7 +37,7 @@ class RideController < ApplicationController
 
     response = Hash.new
     if(is_driver)
-      ride.driver = user_id
+      ride.driver = :user_id
     end
     response[:status] = "success"
     response[:num_of_participants] = ride.users.count

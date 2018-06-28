@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_28_083927) do
+ActiveRecord::Schema.define(version: 2018_06_28_144730) do
 
   create_table "messages", force: :cascade do |t|
     t.integer "send_from"
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 2018_06_28_083927) do
     t.string "from"
     t.string "to"
     t.integer "vehicle"
-    t.string "num_passenger_max"
+    t.integer "num_passenger_max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "driver"
