@@ -1,4 +1,5 @@
 class RideController < ApplicationController
+  skip_before_action :requireLogin, only: [:create, :update]
   def index
     rides = Ride.all
     response = Hash.new
@@ -16,7 +17,7 @@ class RideController < ApplicationController
     ride = Ride.new(ride_require.except(:passengers))
     response[:id] = ride.save ? ride.id : nil
     for id in :passengers do
-      user.find(id).rides |= [ride] 
+      user.find(id).rides |= [ride]
 
     end
     render :json => response

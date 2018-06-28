@@ -1,12 +1,13 @@
 require 'digest'
 class LoginController < ApplicationController
-    def index:
+    skip_before_action :requireLogin
+    def login
         response = Hash.new
         begin
-            user = User.all.where!(username: loginParam[:username])
+            user = User.where(username: loginParam[:username]).take!
             digest = Digest::SHA1.hexdigest loginParam[:password]
             if digest == user.password
-                prevToken = Token.all.where(user_id: user.id)
+                prevToken = Token.where(user_id: user.id)
                 prevToken.each do |pt|
                     pt.destroy
                 end
@@ -18,9 +19,26 @@ class LoginController < ApplicationController
                 response[:token] = token.content
             else
                 response[:status] = 'success'
+            end
         rescue ActiveRecord::RecordNotFound
-            response[:status] = 'faild'
+            response[:status] = 'failed'
+            response[:error] = 'username or password are invalid'
         end
+        render :json => response
+    end
+    def logout
+        begin
+            tokenParam = params.require(:token)
+        rescue ActionController::ParameterMissing
+        end
+
+        begin
+            token = Token.where(content: tokenParam[:token]).take!
+            token.destroy
+        rescue ActiveRecord::RecordNotFound
+        end
+        response = Hash.new
+        response[:status] = 'success'
         render :json => response
     end
     private
