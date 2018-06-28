@@ -6,6 +6,13 @@ Rails.application.routes.draw do
     resources :messages do
       post :talked_to
 
+    scope :api do
+      resources :ride
+      resources :messages do
+        collection do
+          post :talked_to
+        end
+      end    
     end
   end
 end
