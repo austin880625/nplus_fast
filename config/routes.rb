@@ -6,9 +6,13 @@ Rails.application.routes.draw do
     get '/logout', to: 'user#logout'
     get '/me', to: 'user#me'
     resources :messages do
+      member do
+        post :show
+      end
       collection do
         post :talked_to
       end
     end
+
   end
 end

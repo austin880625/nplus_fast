@@ -23,6 +23,12 @@ class MessagesController < ApplicationController
     render :json => response
   end
 
+  def show #get all messages with user[:id]
+    friend_id = params.require(:id)
+    user_id = params.require(:user_id)
+    msgs = Message.select(:send_from, :send_to, :content, :created_at).where(:send_from => user_id, :send_to => friend_id).order(:created_at => :desc)
+    render :json => msgs
+  end
   private
   def talking_user
     params.permit(:id)
